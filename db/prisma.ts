@@ -1,7 +1,11 @@
 import { neonConfig } from '@neondatabase/serverless';
 import { PrismaNeon } from '@prisma/adapter-neon';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@/lib/generated/prisma/client';
 import ws from 'ws';
+
+// Temporary fix to avoid implicit any errors for compute() arguments
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 // Sets up WebSocket connections, which enables Neon to use WebSocket communication.
 neonConfig.webSocketConstructor = ws;
@@ -17,12 +21,12 @@ export const prisma = new PrismaClient({ adapter }).$extends({
   result: {
     product: {
       price: {
-        compute(product) {
+        compute(product: any) {
           return product.price.toString();
         },
       },
       rating: {
-        compute(product) {
+        compute(product: any) {
           return product.rating.toString();
         },
       },
